@@ -1,0 +1,21 @@
+[{
+	"name": "monkeys",
+	"unitPrice": 200,
+	"quantity": 50,
+	"legal": true
+}, {
+	"name": "saffron",
+	"unitPrice": 300,
+	"quantity": 50,
+	"legal": true
+}, {
+	"name": "alcohol",
+	"unitPrice": 20,
+	"quantity": 50,
+	"legal": false
+}, {
+	"name": "silk",
+	"unitPrice": 70,
+	"quantity": 50,
+	"legal": true
+}]

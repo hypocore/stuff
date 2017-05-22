@@ -1,0 +1,123 @@
+<section>
+<p>Captain's Log</p>
+<br />
+<form name="captainInfo"
+      novalidate
+      ng-submit="signupForm()">
+  <fieldset>
+    <legend>Captain's Signup</legend>
+
+  </fieldset>
+
+  <label name="name">Your Name:</label>
+  <input
+        name="name"
+        type="text"
+        placeholder="Your name"
+        ng-model="player.name"
+        ng-minlength=2
+        ng-maxlength=50
+        ng-pattern="/^[a-zA-Z]{1,100}$/"
+        required
+        ng-focus/>
+  <br />
+  <br />
+  <div class="error"
+        ng-show="captainInfo.name.$dirty && captainInfo.name.$invalid && !captainInfo.name.$focused">
+    <small class="error"
+          ng-show="captainInfo.name.$error.required">
+          Enter a valid name.
+    </small>
+    <small class="error"
+          ng-show="captainInfo.name.$error.pattern">
+          Names can't have those characters in them.
+    </small>
+      <br />
+    <small class="error"
+          ng-show="captainInfo.name.$error.minlength">
+          Your name is required to be at least 2 characters.
+    </small>
+      <br />
+    <small class="error"
+          ng-show="captainInfo.name.$error.maxlength">
+          Your name cannot be longer than 50 characters.
+    </small>
+
+  </div>
+  <br />
+  <label name="age">Your Age:</label>
+  <input name="age"
+         type="text"
+         placeholder="Captain Age"
+         ng-model="player.age"
+         ng-minlength=2
+         ng-maxlength=3
+          ng-pattern="/[0-9]/"
+          required/>
+  <br />
+    <br />
+  <div class="error"
+        ng-show="captainInfo.age.$dirty && captainInfo.age.$invalid">
+    <small class="error"
+            ng-show="captainInfo.age.$error.minlength">
+            <p>A captain can't be that young!</p>
+    </small>
+    <small class="error"
+           ng-show="captainInfo.age.$error.maxlength">
+           <p>A captain can't be that old!</p>
+    </small>
+    <small class="error"
+          ng-show="captainInfo.age.$error.required">
+          <p>You must enter a valid age.</p>
+    </small>
+
+  </div>
+
+  <label name="email"><p>Your email:</label>
+  <input type="email"
+        placeholder="Your email"
+        name="email"
+        ng-model="player.email"
+        ng-minlength=3
+        ng-maxlength=50
+        ng-pattern="/^[a-zA-Z]{1,100}$/"
+        required/></p>
+  <br />
+  <br />
+  <div class="error"
+        ng-show="captainInfo.email.$dirty && captainInfo.email.$invalid">
+        <small class="error"
+                ng-show="captainInfo.email.$error.required">
+                Your email is required.
+        </small>
+          <br />
+        <small class="error"
+                ng-show="captainInfo.email.$error.minlength">
+        </small>
+                Your email is required to be at least 3 characters.
+        </small>
+        <small class="error"
+              ng-show="captainInfo.email.$error.pattern">
+              Emails can't have those characters in them.
+        </small>
+          <br />
+   </div>
+<button type="submit" class="button radius"
+        ng-disabled="captainInfo.$invalid">
+        Submit
+</button>
+
+</form>
+<br />
+<br />
+
+<input type="text"
+        ng-model="person.name" />
+<div ng-switch on="person.name">
+    <p ng-switch-default>
+      And the winner is:
+    </p>
+    <h1 ng-switch-when="James">{{ person.name }}</h1>
+
+</div>
+</section>

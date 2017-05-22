@@ -1,0 +1,89 @@
+/* app css stylesheet */
+
+.menu {
+  list-style: none;
+  border-bottom: 0.1em solid black;
+  margin-bottom: 2em;
+  padding: 0 0 0.5em;
+}
+
+.menu:before {
+  content: "[";
+}
+
+.menu:after {
+  content: "]";
+}
+
+.menu > li {
+  display: inline;
+}
+
+.menu > li + li:before {
+  content: "|";
+  padding-right: 0.3em;
+}
+
+
+.viewShift div.ng-enter{
+  transition: 0.5s linear all;
+  opacity: 0;
+}
+
+.viewShift div.ng-enter.ng-enter-active{
+  opacity: 1;
+}
+
+@-webkit-keyframes shake {
+  10%, 90% {
+    -webkit-transform: translate3d(-1px, 0, 0);
+  }
+  20%, 80% {
+    -webkit-transform: translate3d(2px, 0, 0);
+  }
+  30%, 50%, 70% {
+    -webkit-transform: translate3d(-4px, 0, 0);
+  }
+  40%, 60% {
+    -webkit-transform: translate3d(4px, 0, 0);
+  }
+}
+
+@keyframes shake {
+  10%, 90% {
+            transform: translate3d(-1px, 0, 0);
+  }
+  20%, 80% {
+            transform: translate3d(2px, 0, 0);
+  }
+  30%, 50%, 70% {
+            transform: translate3d(-4px, 0, 0);
+  }
+  40%, 60% {
+            transform: translate3d(4px, 0, 0);
+  }
+}
+
+
+
+
+.shaker:hover
+{
+	-webkit-animation-name: thumb;
+	-webkit-animation-duration: 200ms;
+	-webkit-transform-origin:50% 50%;
+	-webkit-animation-iteration-count: 2;
+	-webkit-animation-timing-function: linear;
+}
+
+@-webkit-keyframes thumb {
+	0% { -webkit-transform: scale(1); }
+	50% { -webkit-transform: scale(0.9); }
+	100% { -webkit-transform: scale(1); }
+}
+
+@keyframes thumb {
+	0% { transform: scale(1); }
+	50% { transform: scale(0.9); }
+	100% { transform: scale(1); }
+}
