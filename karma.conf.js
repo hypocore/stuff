@@ -11,8 +11,7 @@ module.exports = function(config) {
       'components/**/*.js',
       'view*/**/*.js',
       'controllers/*.js',
-      'factories/*.js',
-      'directives/*.js'
+      'factories/*.js'
     ],
 
     autoWatch: true,
