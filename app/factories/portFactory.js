@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('myApp.view2')
 .factory('portFactory', ['$http', 
                         '$timeout',

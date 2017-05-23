@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('myApp.view2')
 .controller('View2Ctrl', ['$scope', 
                             '$rootScope', 
@@ -71,14 +73,14 @@ angular.module('myApp.view2')
             unitPrice: parseInt(vm.newProduct.unitPrice),
             quantity: parseInt(vm.newProduct.quantity),
             legal: vm.newProduct.legal
-          }
+          };
 
         vm.localgoods.push(newProduct);
 
-        vm.newProduct.name = "",
-        vm.newProduct.unitPrice = "",
-        vm.newProduct.quantity = "",
-        vm.newProduct.legal = false
+        vm.newProduct.name = "";
+        vm.newProduct.unitPrice = "";
+        vm.newProduct.quantity = "";
+        vm.newProduct.legal = false;
     }
 
     function getFactoryToSayHi(){
@@ -100,7 +102,7 @@ angular.module('myApp.view2')
                         "unitPrice": 80,
                         "quantity": 50,
                         "legal": true
-                        }]
+                        }];
         $http({
             method: 'GET',
             url: 'data/localGoods.json',

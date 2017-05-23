@@ -27,10 +27,10 @@ angular.module('myApp.view1', ['ngRoute'])
         legal: $scope.newProduct.legal
       });
 
-      $scope.newProduct.name = "",
-      $scope.newProduct.unitPrice = "",
-      $scope.newProduct.quantity = "",
-      $scope.newProduct.legal = false
+      $scope.newProduct.name = "";
+      $scope.newProduct.unitPrice = "";
+      $scope.newProduct.quantity = "";
+      $scope.newProduct.legal = false;
     };
 
-}])
+}]);
