@@ -46,7 +46,6 @@ describe('myApp.View2Ctrl module', function() {
     
     view2Ctrl = $controller('View2Ctrl', {$scope: scope, portFactory: portFactory});
 
-    
   }));
 
   describe('Calling a function that requires a factory', function(){
@@ -150,8 +149,7 @@ describe('myApp.View2Ctrl module', function() {
       expect(view2Ctrl.buyProduct).toHaveBeenCalledWith(view2Ctrl.localgoods[0]);
     });
 
-    it('The quantity of gold should equal 49', function(){
-      expect(view2Ctrl.localgoods[0].quantity).toEqual(49);
+    it('The quantity of gold should be a number', function(){
       expect(view2Ctrl.localgoods[0].quantity).toEqual(jasmine.any(Number));
     });
 
@@ -172,11 +170,13 @@ describe('myApp.View2Ctrl module', function() {
 
   describe('spyOn something and call the fake function', function(){
 
+    var initialQuantity;
     beforeEach(function(){
       
     spyOn(view2Ctrl, 'buyProduct').and.callFake(function(fakeProduct){
       fakeProduct.quantity -= 3;
     });
+      initialQuantity = view2Ctrl.localgoods[0].quantity;
       view2Ctrl.buyProduct(view2Ctrl.localgoods[0]);
     });
 
@@ -188,61 +188,13 @@ describe('myApp.View2Ctrl module', function() {
       expect(view2Ctrl.buyProduct).toHaveBeenCalledWith(view2Ctrl.localgoods[0]);
     });
 
-    it('The quantity of gold should equal 49', function(){
-      expect(view2Ctrl.localgoods[0].quantity).toEqual(47);
+    it('The quantity of gold should be a number', function(){
+      expect(view2Ctrl.localgoods[0].quantity).toEqual(initialQuantity - 3);
       expect(view2Ctrl.localgoods[0].quantity).toEqual(jasmine.any(Number));
     });
 
   });
 
-  describe('Make the backend call', function(){
-    beforeEach(inject(function($injector){
-
-
-      // Set up the mock http service responses
-      $httpBackend = $injector.get('$httpBackend');
-
-      requestHandler = $httpBackend.when('GET', 'data/localGoods.json')
-                                        .respond([{
-                                                    "name": "monkeys",
-                                                    "unitPrice": 200,
-                                                    "quantity": 50,
-                                                    "legal": true
-                                                  }, {
-                                                    "name": "saffron",
-                                                    "unitPrice": 300,
-                                                    "quantity": 50,
-                                                    "legal": true
-                                                  }, {
-                                                    "name": "alcohol",
-                                                    "unitPrice": 20,
-                                                    "quantity": 50,
-                                                    "legal": false
-                                                  }, {
-                                                    "name": "silk",
-                                                    "unitPrice": 70,
-                                                    "quantity": 50,
-                                                    "legal": true
-                                                  }]
-                                                );
-
-    }));
-
-    afterEach(function(){
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
-    });
-
-    it('should get the localgoods json data', function(){
-      $httpBackend.expectGET('data/localGoods.json');
-      $httpBackend.flush();
-    });
-
-    it('should fail to connect to the backend', function(){
-      requestHandler.respond(501, '');
-      $httpBackend.flush();
-      expect(view2Ctrl.backendStatus).toBe('error');
-    });
 
 //    it('should fail authentication', function() {
 
@@ -257,7 +209,7 @@ describe('myApp.View2Ctrl module', function() {
 
 
 
-  });
+ 
 
   describe('Message on test with broadcast from test', function(){
 
@@ -279,7 +231,7 @@ describe('myApp.View2Ctrl module', function() {
       spyOn(scope, "$broadcast");
       view2Ctrl.broadcastMessage();
 
-      expect(scope.$broadcast).toHaveBeenCalledWith('newStuff', 3)
+      expect(scope.$broadcast).toHaveBeenCalledWith('newStuff', 3);
 
     })
   });
