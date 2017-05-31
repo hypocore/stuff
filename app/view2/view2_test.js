@@ -5,28 +5,107 @@ describe('myApp.View2Ctrl module', function() {
   beforeEach(module('myApp.view2'));
 
   // beforeEach(module('myApp.view2', function($provide) {
-  //     $provide.factory('portFactory', function () { 
+  //     $provide.factory('portFactory', function ($http, $timeout) { 
 
-  //       var factory = this;
+  //   var portGoods = [];
+  //   var portWealth;
+  //   var factory = this;
 
-  //       angular.extend(factory, {
-  //           message: 'shit',
-  //           valueArray: [],
-  //           generateRandom: generateRandom,
-  //           sayHi: sayHi
+  //   angular.extend(factory, {
+  //       message: '',
+  //       valueArray: [],
+  //       generateRandom: generateRandom,
+  //       sayHi: sayHi,
+  //       returnHey: returnHey,
+  //       randomizeGoods: randomizeGoods,
+  //       getPortGoods: getPortGoods,
+  //       setPortGoods: setPortGoods,
+  //       addPortGoods: addPortGoods,
+  //       getPortWealth: getPortWealth,
+  //       setPortWealth: setPortWealth,
+  //       addPortWealth: addPortWealth,
+  //       subtractPortWealth: subtractPortWealth
 
+  //   });
+
+  //   return factory;
+
+
+  //   function generateRandom(factor){
+  //       var randomNumber = (Math.floor((Math.random() * 10) + 1)) * factor;
+  //       factory.valueArray.push(randomNumber);
+  //   }
+
+  //   function _getRandomNumber(factor){
+  //       return (Math.floor((Math.random() * 10) + 1)) * factor;
+  //   }
+
+  //   function sayHi(){
+  //       factory.message = "hi";
+  //   }
+
+  //   function returnHey(){
+  //       return 'hey';
+  //   }
+
+  //   function randomizeGoods(){
+  //       angular.forEach(portGoods, function(item, index){
+  //           item.quantity = generateRandom(5);
   //       });
+  //   }
 
-  //       return factory;
+  //   function getPortGoods(){
+  //       return portGoods;
+  //   }
 
-  //       function generateRandom(factor){
-  //           var randomNumber = (Math.floor((Math.random() * 10) + 1)) * factor;
-  //           factory.valueArray.push(randomNumber);
-  //       }
+  //   function setPortGoods(){
+  //       portGoods = [{"name": "gold",
+  //                       "unitPrice": 100,
+  //                       "quantity": 50,
+  //                       "legal": true},
+  //                       {"name": "tea",
+  //                       "unitPrice": 80,
+  //                       "quantity": 50,
+  //                       "legal": true
+  //                       }];
 
-  //       function sayHi(){
-  //         factory.message = 'hi';
-  //       }
+  //       $http({
+  //           method: 'GET',
+  //           url: 'data/localGoods.json',
+  //           headers: {
+  //               'Content-Type': 'application/json',
+  //               'Accept': 'application/json'
+  //           },
+  //           data: {}
+  //       }).success(function (response) {
+  //           for(var i = 0; i < response.length; i++){
+  //               portGoods.push(response[i]);
+  //           };
+          
+  //       }).catch(function(error){
+  //           console.log('error');
+  //       });
+  //   }
+
+  //   function addPortGoods(){
+
+  //   }
+
+  //   function getPortWealth(){
+  //       return portWealth;
+  //   }
+
+  //   function setPortWealth(){
+  //       portWealth = _getRandomNumber(500);
+  //   }
+
+  //   function addPortWealth(amount){
+  //       portWealth += amount;
+  //   }
+
+  //   function subtractPortWealth(amount){
+  //       portWealth -= amount;
+  //   }
 
   //   // End fake factory
   //   });
@@ -36,15 +115,17 @@ describe('myApp.View2Ctrl module', function() {
   var rootScope;
   var view2Ctrl;
   var $httpBackend, requestHandler;
+  var $q;
   var portFactory;
   var testSpy;
-  beforeEach(inject(function($rootScope, $controller, _portFactory_){
+  beforeEach(inject(function($rootScope, $controller, _$q_, _portFactory_){
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
+    $q = _$q_;
     portFactory = _portFactory_;
     
-    view2Ctrl = $controller('View2Ctrl', {$scope: scope, portFactory: portFactory});
+    view2Ctrl = $controller('View2Ctrl', {$scope: scope});
 
   }));
 
@@ -246,6 +327,52 @@ describe('myApp.View2Ctrl module', function() {
       expect(rootScope.$broadcast).toHaveBeenCalledWith('rootMessage', 4);
 
     })
+  });
+
+  describe('Resolve a promise so that weather is not safe', function(){
+
+    // var $timeout;
+    // beforeEach(inject(function($injector){
+    //   $timeout = $injector.get('$timeout');
+    //         // Set up the mock http service responses
+    //   $httpBackend = $injector.get('$httpBackend');
+
+    //   requestHandler = $httpBackend.when('GET', 'data/localGoods.json')
+    //                                     .respond('');
+    // }));
+
+
+    //   afterEach(function(){
+    //     $httpBackend.verifyNoOutstandingExpectation();
+    //     $httpBackend.verifyNoOutstandingRequest();
+    //     $timeout.verifyNoPendingTasks();
+    //   });
+
+
+    it('should resolve the promise as being false', function(done){
+      setTimeout(function(){
+        view2Ctrl.checkSafeWeather();
+        expect(view2Ctrl.safeWeather).toEqual(false);
+        done();
+      }, 50);
+
+
+      view2Ctrl.reportWeather();
+      done();
+      
+
+      // rootScope.$digest();
+
+      // $httpBackend.flush();
+      // $timeout.flush();
+
+
+      
+        
+      
+
+      // done();
+    });
   });
 
   // Jasmine clock only works with setTimeout

@@ -5,16 +5,23 @@ angular.module('myApp.view2')
                             '$rootScope', 
                             '$http', 
                             '$timeout',
+                            '$q',
                             'portFactory',
                             'shipFactory',
                             function($scope, 
                                     $rootScope,
                                     $http, 
                                     $timeout,
+                                    $q,
                                     portFactory,
                                     shipFactory) {
     
     var productionTimeout;
+    var defer = $q.defer();
+    var waitForCoastPatrol = defer.promise;
+    var coastPatrolDelay;
+
+
     var vm = this;
 
     angular.extend(vm, {
@@ -28,6 +35,7 @@ angular.module('myApp.view2')
         showCheats: false,
         portWealth: 0,
         shipWealth: 0,
+        safeWeather: true,
 
         buyProduct: buyProduct,
         sellProduct: sellProduct,
@@ -39,6 +47,8 @@ angular.module('myApp.view2')
         getFactoryToSayHi: getFactoryToSayHi,
         getFactoryToReturnHey: getFactoryToReturnHey,
         setRandomGoods: setRandomGoods,
+        checkSafeWeather: checkSafeWeather,
+        reportWeather: reportWeather,
         init: init
 
     });
@@ -64,7 +74,7 @@ angular.module('myApp.view2')
     }
 
     function sellProduct(product){
-        
+
         // If the port has enough to buy the product
         if(portFactory.getPortWealth() > product.unitPrice){
             // Take the value of the product away from the port
@@ -127,6 +137,18 @@ angular.module('myApp.view2')
         portFactory.randomizeGoods(factor);
     }
 
+   
+    function checkSafeWeather(){
+        waitForCoastPatrol.then(null, null, function(safeToPutToSea){
+            vm.safeWeather = safeToPutToSea;
+        });
+    }
+    
+
+    function reportWeather(){
+        defer.notify(false);
+    }
+
     function init(){
 
         portFactory.setPortGoods();
@@ -140,6 +162,8 @@ angular.module('myApp.view2')
         $scope.$on('signal', function(){
             vm.messages += 1;
         });
+
+
 
     }
 
