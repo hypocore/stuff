@@ -5,28 +5,107 @@ describe('myApp.View2Ctrl module', function() {
   beforeEach(module('myApp.view2'));
 
   // beforeEach(module('myApp.view2', function($provide) {
-  //     $provide.factory('portFactory', function () { 
+  //     $provide.factory('portFactory', function ($http, $timeout) { 
 
-  //       var factory = this;
+  //   var portGoods = [];
+  //   var portWealth;
+  //   var factory = this;
 
-  //       angular.extend(factory, {
-  //           message: 'shit',
-  //           valueArray: [],
-  //           generateRandom: generateRandom,
-  //           sayHi: sayHi
+  //   angular.extend(factory, {
+  //       message: '',
+  //       valueArray: [],
+  //       generateRandom: generateRandom,
+  //       sayHi: sayHi,
+  //       returnHey: returnHey,
+  //       randomizeGoods: randomizeGoods,
+  //       getPortGoods: getPortGoods,
+  //       setPortGoods: setPortGoods,
+  //       addPortGoods: addPortGoods,
+  //       getPortWealth: getPortWealth,
+  //       setPortWealth: setPortWealth,
+  //       addPortWealth: addPortWealth,
+  //       subtractPortWealth: subtractPortWealth
 
+  //   });
+
+  //   return factory;
+
+
+  //   function generateRandom(factor){
+  //       var randomNumber = (Math.floor((Math.random() * 10) + 1)) * factor;
+  //       factory.valueArray.push(randomNumber);
+  //   }
+
+  //   function _getRandomNumber(factor){
+  //       return (Math.floor((Math.random() * 10) + 1)) * factor;
+  //   }
+
+  //   function sayHi(){
+  //       factory.message = "hi";
+  //   }
+
+  //   function returnHey(){
+  //       return 'hey';
+  //   }
+
+  //   function randomizeGoods(){
+  //       angular.forEach(portGoods, function(item, index){
+  //           item.quantity = generateRandom(5);
   //       });
+  //   }
 
-  //       return factory;
+  //   function getPortGoods(){
+  //       return portGoods;
+  //   }
 
-  //       function generateRandom(factor){
-  //           var randomNumber = (Math.floor((Math.random() * 10) + 1)) * factor;
-  //           factory.valueArray.push(randomNumber);
-  //       }
+  //   function setPortGoods(){
+  //       portGoods = [{"name": "gold",
+  //                       "unitPrice": 100,
+  //                       "quantity": 50,
+  //                       "legal": true},
+  //                       {"name": "tea",
+  //                       "unitPrice": 80,
+  //                       "quantity": 50,
+  //                       "legal": true
+  //                       }];
 
-  //       function sayHi(){
-  //         factory.message = 'hi';
-  //       }
+  //       $http({
+  //           method: 'GET',
+  //           url: 'data/localGoods.json',
+  //           headers: {
+  //               'Content-Type': 'application/json',
+  //               'Accept': 'application/json'
+  //           },
+  //           data: {}
+  //       }).success(function (response) {
+  //           for(var i = 0; i < response.length; i++){
+  //               portGoods.push(response[i]);
+  //           };
+          
+  //       }).catch(function(error){
+  //           console.log('error');
+  //       });
+  //   }
+
+  //   function addPortGoods(){
+
+  //   }
+
+  //   function getPortWealth(){
+  //       return portWealth;
+  //   }
+
+  //   function setPortWealth(){
+  //       portWealth = _getRandomNumber(500);
+  //   }
+
+  //   function addPortWealth(amount){
+  //       portWealth += amount;
+  //   }
+
+  //   function subtractPortWealth(amount){
+  //       portWealth -= amount;
+  //   }
 
   //   // End fake factory
   //   });
@@ -36,17 +115,18 @@ describe('myApp.View2Ctrl module', function() {
   var rootScope;
   var view2Ctrl;
   var $httpBackend, requestHandler;
+  var $q;
   var portFactory;
   var testSpy;
-  beforeEach(inject(function($rootScope, $controller, _portFactory_){
+  beforeEach(inject(function($rootScope, $controller, _$q_, _portFactory_){
 
     rootScope = $rootScope;
     scope = $rootScope.$new();
+    $q = _$q_;
     portFactory = _portFactory_;
     
-    view2Ctrl = $controller('View2Ctrl', {$scope: scope, portFactory: portFactory});
+    view2Ctrl = $controller('View2Ctrl', {$scope: scope});
 
-    
   }));
 
   describe('Calling a function that requires a factory', function(){
@@ -150,8 +230,7 @@ describe('myApp.View2Ctrl module', function() {
       expect(view2Ctrl.buyProduct).toHaveBeenCalledWith(view2Ctrl.localgoods[0]);
     });
 
-    it('The quantity of gold should equal 49', function(){
-      expect(view2Ctrl.localgoods[0].quantity).toEqual(49);
+    it('The quantity of gold should be a number', function(){
       expect(view2Ctrl.localgoods[0].quantity).toEqual(jasmine.any(Number));
     });
 
@@ -172,11 +251,13 @@ describe('myApp.View2Ctrl module', function() {
 
   describe('spyOn something and call the fake function', function(){
 
+    var initialQuantity;
     beforeEach(function(){
       
     spyOn(view2Ctrl, 'buyProduct').and.callFake(function(fakeProduct){
       fakeProduct.quantity -= 3;
     });
+      initialQuantity = view2Ctrl.localgoods[0].quantity;
       view2Ctrl.buyProduct(view2Ctrl.localgoods[0]);
     });
 
@@ -188,61 +269,13 @@ describe('myApp.View2Ctrl module', function() {
       expect(view2Ctrl.buyProduct).toHaveBeenCalledWith(view2Ctrl.localgoods[0]);
     });
 
-    it('The quantity of gold should equal 49', function(){
-      expect(view2Ctrl.localgoods[0].quantity).toEqual(47);
+    it('The quantity of gold should be a number', function(){
+      expect(view2Ctrl.localgoods[0].quantity).toEqual(initialQuantity - 3);
       expect(view2Ctrl.localgoods[0].quantity).toEqual(jasmine.any(Number));
     });
 
   });
 
-  describe('Make the backend call', function(){
-    beforeEach(inject(function($injector){
-
-
-      // Set up the mock http service responses
-      $httpBackend = $injector.get('$httpBackend');
-
-      requestHandler = $httpBackend.when('GET', 'data/localGoods.json')
-                                        .respond([{
-                                                    "name": "monkeys",
-                                                    "unitPrice": 200,
-                                                    "quantity": 50,
-                                                    "legal": true
-                                                  }, {
-                                                    "name": "saffron",
-                                                    "unitPrice": 300,
-                                                    "quantity": 50,
-                                                    "legal": true
-                                                  }, {
-                                                    "name": "alcohol",
-                                                    "unitPrice": 20,
-                                                    "quantity": 50,
-                                                    "legal": false
-                                                  }, {
-                                                    "name": "silk",
-                                                    "unitPrice": 70,
-                                                    "quantity": 50,
-                                                    "legal": true
-                                                  }]
-                                                );
-
-    }));
-
-    afterEach(function(){
-      $httpBackend.verifyNoOutstandingExpectation();
-      $httpBackend.verifyNoOutstandingRequest();
-    });
-
-    it('should get the localgoods json data', function(){
-      $httpBackend.expectGET('data/localGoods.json');
-      $httpBackend.flush();
-    });
-
-    it('should fail to connect to the backend', function(){
-      requestHandler.respond(501, '');
-      $httpBackend.flush();
-      expect(view2Ctrl.backendStatus).toBe('error');
-    });
 
 //    it('should fail authentication', function() {
 
@@ -257,7 +290,7 @@ describe('myApp.View2Ctrl module', function() {
 
 
 
-  });
+ 
 
   describe('Message on test with broadcast from test', function(){
 
@@ -279,7 +312,7 @@ describe('myApp.View2Ctrl module', function() {
       spyOn(scope, "$broadcast");
       view2Ctrl.broadcastMessage();
 
-      expect(scope.$broadcast).toHaveBeenCalledWith('newStuff', 3)
+      expect(scope.$broadcast).toHaveBeenCalledWith('newStuff', 3);
 
     })
   });
@@ -294,6 +327,46 @@ describe('myApp.View2Ctrl module', function() {
       expect(rootScope.$broadcast).toHaveBeenCalledWith('rootMessage', 4);
 
     })
+  });
+
+  describe('Resolve a promise so that weather is not safe', function(){
+
+    // var $timeout;
+    // beforeEach(inject(function($injector){
+    //   $timeout = $injector.get('$timeout');
+    //         // Set up the mock http service responses
+    //   $httpBackend = $injector.get('$httpBackend');
+
+    //   requestHandler = $httpBackend.when('GET', 'data/localGoods.json')
+    //                                     .respond('');
+    // }));
+
+
+    //   afterEach(function(){
+    //     $httpBackend.verifyNoOutstandingExpectation();
+    //     $httpBackend.verifyNoOutstandingRequest();
+    //     $timeout.verifyNoPendingTasks();
+    //   });
+
+
+    it('should resolve the promise as being false', function(done){
+      // It must be in the same it block
+      setTimeout(function(){
+        view2Ctrl.reportWeather();
+        expect(view2Ctrl.safeWeather).toEqual(false);
+        done();
+      }, 50);
+
+      view2Ctrl.checkSafeWeather();
+      done();
+      
+
+      // rootScope.$digest();
+
+      // $httpBackend.flush();
+      // $timeout.flush();
+
+    });
   });
 
   // Jasmine clock only works with setTimeout

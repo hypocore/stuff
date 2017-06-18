@@ -5,14 +5,23 @@ angular.module('myApp.view2')
                             '$rootScope', 
                             '$http', 
                             '$timeout',
+                            '$q',
                             'portFactory',
+                            'shipFactory',
                             function($scope, 
                                     $rootScope,
                                     $http, 
                                     $timeout,
-                                    portFactory) {
+                                    $q,
+                                    portFactory,
+                                    shipFactory) {
     
     var productionTimeout;
+    var defer = $q.defer();
+    var waitForCoastPatrol = defer.promise;
+    var coastPatrolDelay;
+
+
     var vm = this;
 
     angular.extend(vm, {
@@ -23,6 +32,10 @@ angular.module('myApp.view2')
         backendStatus: undefined,
         controllerMessage: '',
         controllerMessageTwo: '',
+        showCheats: false,
+        portWealth: 0,
+        shipWealth: 0,
+        safeWeather: true,
 
         buyProduct: buyProduct,
         sellProduct: sellProduct,
@@ -33,6 +46,9 @@ angular.module('myApp.view2')
         broadcastRootscopeMsg: broadcastRootscopeMsg,
         getFactoryToSayHi: getFactoryToSayHi,
         getFactoryToReturnHey: getFactoryToReturnHey,
+        setRandomGoods: setRandomGoods,
+        checkSafeWeather: checkSafeWeather,
+        reportWeather: reportWeather,
         init: init
 
     });
@@ -41,12 +57,37 @@ angular.module('myApp.view2')
 
     function buyProduct(product){
 
-      product.quantity -= 1;
+      // If the ship has enough money to buy the product:
+      if(shipFactory.getShipWealth() > product.unitPrice){
+
+        // Take the value of the product away from the ship
+        shipFactory.subtractShipWealth(product.unitPrice);
+        vm.shipWealth = shipFactory.getShipWealth();
+
+        // Add the value of the product to the port
+        portFactory.addPortWealth(product.unitPrice);
+        vm.portWealth = portFactory.getPortWealth();
+
+        product.quantity -= 1;
+      }
 
     }
 
     function sellProduct(product){
-      product.quantity += 1;
+
+        // If the port has enough to buy the product
+        if(portFactory.getPortWealth() > product.unitPrice){
+            // Take the value of the product away from the port
+            portFactory.subtractPortWealth(product.unitPrice);
+            vm.portWealth = portFactory.getPortWealth();
+
+            // Add the value of the product to the ship's coffers
+            shipFactory.addShipWealth(product.unitPrice);
+            vm.shipWealth = shipFactory.getShipWealth();
+
+            product.quantity += 1;
+        }
+
     }
 
     function produceGoods(product){
@@ -92,38 +133,37 @@ angular.module('myApp.view2')
         vm.controllerMessageTwo = portFactory.returnHey();
     }
 
+    function setRandomGoods(factor){
+        portFactory.randomizeGoods(factor);
+    }
+
+   
+    function checkSafeWeather(){
+        waitForCoastPatrol.then(null, null, function(safeToPutToSea){
+            vm.safeWeather = safeToPutToSea;
+        });
+    }
+    
+
+    function reportWeather(){
+        defer.notify(false);
+    }
+
     function init(){
 
-        vm.localgoods = [{"name": "gold",
-                        "unitPrice": 100,
-                        "quantity": 50,
-                        "legal": true},
-                        {"name": "tea",
-                        "unitPrice": 80,
-                        "quantity": 50,
-                        "legal": true
-                        }];
-        $http({
-            method: 'GET',
-            url: 'data/localGoods.json',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            data: {}
-        }).success(function (response) {
-            for(var i = 0; i < response.length; i++){
-                vm.localgoods.push(response[i]);
-            };
-          
-        }).catch(function(error){
-            vm.backendStatus = 'error';
-        });
+        portFactory.setPortGoods();
+        portFactory.setPortWealth();
+        shipFactory.setShipWealth(100);
 
+        vm.localgoods = portFactory.getPortGoods();
+        vm.portWealth = portFactory.getPortWealth();
+        vm.shipWealth = shipFactory.getShipWealth();
 
         $scope.$on('signal', function(){
             vm.messages += 1;
         });
+
+
 
     }
 

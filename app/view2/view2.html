@@ -3,6 +3,18 @@ Hong Kong
 <!-- <div data-ng-bind="portController.testTwo"></div> -->
 <br />
 <br />
+
+<div>borrow money</div>
+  <form
+    name="bank.lend">
+      <input
+        type="text"
+        placeholder="0"
+        ng-model="vm.money"
+        money-mask="en"
+        ng-model-options="{ allowInvalid: true }" />
+  </form>
+
 <p>
   Search:
   <input type="text" ng-model="search"></input>
@@ -16,14 +28,17 @@ Hong Kong
 
 <button ng-click="clickOrder='name'">Order by Name</button>
 <button ng-click="clickOrder='unitPrice'">Order by Unit Price</button>
-<p>Cheat: add product form</p>
-<form ng-submit="vm.addProduct()">
-    <input type="text" placeholder="name" ng-model="vm.newProduct.name" />
-    <input type="text" placeholder="unit price" ng-model="vm.newProduct.unitPrice" />
-    <input type="text" placeholder="quantity" ng-model="vm.newProduct.quantity" />
-    <input type="checkbox" placeholder="legal" ng-model="vm.newProduct.legal">legal?</input>
-    <input type="submit" value="Add a new product" />
-</form>
+<button ng-click="vm.showCheats">Cheats</button>
+<div ng-show="vm.showCheats">
+  <p>Cheat: add product form</p>
+  <form ng-submit="vm.addProduct()">
+      <input type="text" placeholder="name" ng-model="vm.newProduct.name" />
+      <input type="text" placeholder="unit price" ng-model="vm.newProduct.unitPrice" />
+      <input type="text" placeholder="quantity" ng-model="vm.newProduct.quantity" />
+      <input type="checkbox" placeholder="legal" ng-model="vm.newProduct.legal">legal?</input>
+      <input type="submit" value="Add a new product" />
+  </form>
+</div>
 <ul id="productList">
     <!-- <li ng-repeat="product in localgoods | orderBy:clickOrder | filter: search" ng-show="product.legal"> -->
   <li ng-repeat="product in vm.localgoods" ng-show="product.legal">
@@ -32,5 +47,28 @@ Hong Kong
     <button ng-click="vm.sellProduct(product)">Sell</button>
   </li>
 </ul>
+
+<div class="heading--medium">
+Port wealth: {{vm.portWealth}}
+</div>
+
+<br />
+
+<div class="heading--medium">
+Ship wealth: {{vm.shipWealth}}
+</div>
+
+
+
+<br />
+
+<div>
+  <form ng-submit="vm.addProduct()">
+      <input
+        type="text"
+        placeholder="amount"
+        ng-model="vm.newProduct.name" />
+  </form>
+</div>
 
 </section>
