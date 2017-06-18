@@ -3,6 +3,18 @@ Hong Kong
 <!-- <div data-ng-bind="portController.testTwo"></div> -->
 <br />
 <br />
+
+<div>borrow money</div>
+  <form
+    name="bank.lend">
+      <input
+        type="text"
+        placeholder="0"
+        ng-model="vm.money"
+        money-mask="en"
+        ng-model-options="{ allowInvalid: true }" />
+  </form>
+
 <p>
   Search:
   <input type="text" ng-model="search"></input>
@@ -44,6 +56,19 @@ Port wealth: {{vm.portWealth}}
 
 <div class="heading--medium">
 Ship wealth: {{vm.shipWealth}}
+</div>
+
+
+
+<br />
+
+<div>
+  <form ng-submit="vm.addProduct()">
+      <input
+        type="text"
+        placeholder="amount"
+        ng-model="vm.newProduct.name" />
+  </form>
 </div>
 
 </section>

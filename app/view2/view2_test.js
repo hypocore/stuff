@@ -350,14 +350,14 @@ describe('myApp.View2Ctrl module', function() {
 
 
     it('should resolve the promise as being false', function(done){
+      // It must be in the same it block
       setTimeout(function(){
-        view2Ctrl.checkSafeWeather();
+        view2Ctrl.reportWeather();
         expect(view2Ctrl.safeWeather).toEqual(false);
         done();
       }, 50);
 
-
-      view2Ctrl.reportWeather();
+      view2Ctrl.checkSafeWeather();
       done();
       
 
@@ -366,12 +366,6 @@ describe('myApp.View2Ctrl module', function() {
       // $httpBackend.flush();
       // $timeout.flush();
 
-
-      
-        
-      
-
-      // done();
     });
   });
 
